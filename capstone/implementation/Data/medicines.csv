@@ -1,0 +1,5 @@
+id,pharmacyID,name,batch,expiry,quantity,minStock,demand
+M1001,P1002,paracetamol,para101,2027-06-30,100,20,30
+M1002,P1002,paracetamol,para102,2027-06-30,30,20,30
+M1003,P1001,paracetamol,para103,2027-06-30,75,20,30
+M1004,P1001,Cetirizine,CET101,2026-12-05,40,10,15

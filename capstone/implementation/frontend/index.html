@@ -1,0 +1,235 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goodwell | Medicine Management</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+
+<div class="layout">
+
+    <aside class="sidebar">
+        <div class="brand">
+            <div class="brand-icon">+</div>
+            <div>
+                <h2>Goodwell</h2>
+                <small>Medicine network</small>
+            </div>
+        </div>
+
+        <p class="side-label">WORKSPACE</p>
+
+        <button class="nav active" data-page="overview">01 &nbsp; Overview</button>
+        <button class="nav" data-page="inventory">02 &nbsp; Medicine inventory</button>
+        <button class="nav" data-page="pharmacies">03 &nbsp; Pharmacies</button>
+        <button class="nav" data-page="redistribution">04 &nbsp; Redistribution</button>
+
+        <div class="connection" id="connectionStatus">Connecting to server...</div>
+    </aside>
+
+    <main class="main">
+
+        <header class="topbar">
+            <span>GOODWELL &nbsp; / &nbsp; <b id="pageName">OVERVIEW</b></span>
+            <span id="today"></span>
+        </header>
+
+        <!-- OVERVIEW -->
+        <section class="page active" id="overview">
+            <p class="eyebrow">PREVENT / REDISTRIBUTE / PRESERVE</p>
+            <h1>Medicine overview</h1>
+            <p class="subtitle">A clearer view of stock, expiry windows, and local supply.</p>
+
+            <div class="stats">
+                <div class="stat">
+                    <small>MEDICINE RECORDS</small>
+                    <h2 id="totalMedicines">0</h2>
+                    <p>Across connected pharmacies</p>
+                </div>
+
+                <div class="stat warning">
+                    <small>EXPIRING IN 90 DAYS</small>
+                    <h2 id="expiringCount">0</h2>
+                    <p>Review for safe redistribution</p>
+                </div>
+
+                <div class="stat">
+                    <small>PHARMACY PARTNERS</small>
+                    <h2 id="totalPharmacies">0</h2>
+                    <p>Registered in this network</p>
+                </div>
+
+                <div class="stat danger">
+                    <small>STOCK SHORTAGES</small>
+                    <h2 id="shortageCount">0</h2>
+                    <p>Require attention</p>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-heading">
+                    <div>
+                        <p class="eyebrow">STOCK MONITOR</p>
+                        <h3>Expiry watch</h3>
+                    </div>
+                    <button class="text-button" onclick="showPage('inventory')">View inventory →</button>
+                </div>
+
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>MEDICINE</th>
+                                <th>BATCH</th>
+                                <th>PHARMACY</th>
+                                <th>QUANTITY</th>
+                                <th>EXPIRY DATE</th>
+                                <th>STATUS</th>
+                            </tr>
+                        </thead>
+                        <tbody id="expiryTable"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-heading">
+                    <h3>Shortage alerts</h3>
+                </div>
+                <div id="shortageList" class="alert-list"></div>
+            </div>
+        </section>
+
+        <!-- INVENTORY -->
+        <section class="page" id="inventory">
+            <p class="eyebrow">MODULE 01</p>
+            <h1>Medicine inventory</h1>
+            <p class="subtitle">Register and monitor medicines across pharmacies.</p>
+
+            <div class="panel">
+                <h3>Add new medicine</h3>
+
+                <form id="medicineForm" class="form-grid">
+                    <label>Pharmacy
+                        <select id="medicinePharmacy" required>
+                            <option value="">Select pharmacy</option>
+                        </select>
+                    </label>
+
+                    <label>Medicine name
+                        <input id="medicineName" placeholder="Paracetamol 500mg" required>
+                    </label>
+
+                    <label>Batch number
+                        <input id="medicineBatch" placeholder="B101" required>
+                    </label>
+
+                    <label>Expiry date
+                        <input id="medicineExpiry" type="date" required>
+                    </label>
+
+                    <label>Available quantity
+                        <input id="medicineQuantity" type="number" min="0" required>
+                    </label>
+
+                    <label>Minimum stock
+                        <input id="medicineMin" type="number" min="0" required>
+                    </label>
+
+                    <label>Expected demand
+                        <input id="medicineDemand" type="number" min="0" required>
+                    </label>
+
+                    <button class="primary" type="submit">Add medicine</button>
+                </form>
+            </div>
+
+            <div class="panel">
+                <div class="panel-heading">
+                    <h3>All medicines</h3>
+                    <button class="secondary" onclick="loadAll()">Refresh</button>
+                </div>
+
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>MEDICINE</th>
+                                <th>PHARMACY</th>
+                                <th>QUANTITY</th>
+                                <th>DEMAND</th>
+                                <th>EXPIRY</th>
+                                <th>STATUS</th>
+                            </tr>
+                        </thead>
+                        <tbody id="medicineTable"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- PHARMACIES -->
+        <section class="page" id="pharmacies">
+            <p class="eyebrow">NETWORK MANAGEMENT</p>
+            <h1>Pharmacy partners</h1>
+            <p class="subtitle">Register multiple pharmacies in the medicine network.</p>
+
+            <div class="panel">
+                <h3>Register pharmacy</h3>
+
+                <form id="pharmacyForm" class="form-grid">
+                    <label>Pharmacy name
+                        <input id="pharmacyName" placeholder="City Medical Store" required>
+                    </label>
+
+                    <label>Location
+                        <input id="pharmacyLocation" placeholder="Chennai" required>
+                    </label>
+
+                    <button type="submit" class="primary">Register pharmacy</button>
+                </form>
+            </div>
+
+            <div class="panel">
+                <h3>Registered pharmacies</h3>
+                <div id="pharmacyList" class="pharmacy-grid"></div>
+            </div>
+        </section>
+
+        <!-- REDISTRIBUTION -->
+        <section class="page" id="redistribution">
+            <p class="eyebrow">MODULE 03</p>
+            <h1>Intelligent redistribution</h1>
+            <p class="subtitle">Identify surplus stock and match it with pharmacy shortages.</p>
+
+            <div class="panel">
+                <h3>How redistribution works</h3>
+                <p class="subtitle">
+                    The system compares each pharmacy's available stock,
+                    minimum stock and expected demand.
+                </p>
+
+                <button class="primary" id="redistributeButton">
+                    Run redistribution analysis
+                </button>
+
+                <div id="redistributionResults" class="alert-list"></div>
+            </div>
+
+            <div class="panel">
+                <h3>Previous transfers (this session)</h3>
+                <div id="transferHistory" class="alert-list"></div>
+            </div>
+        </section>
+
+    </main>
+</div>
+
+<div id="toast" class="toast"></div>
+
+</body>
+</html>
